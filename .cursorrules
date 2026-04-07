@@ -1,0 +1,2 @@
+Maintain strict modularity. The API inputs and outputs must never change, even if the underlying ML models are swapped out.
+Use Python 3.11+, FastAPI, and Pydantic v2.

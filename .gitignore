@@ -1,0 +1,13 @@
+venv/
+.venv/
+__pycache__/
+*.pyc
+.env
+.env.*
+!.env.example
+stylobln.db
+*.db
+.DS_Store
+.idea/
+.vscode/
+uploads/

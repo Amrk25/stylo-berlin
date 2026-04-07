@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Stylo Berlin — AI Stylist & Try-On</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            fontFamily: {
+              display: ["JetBrains Mono", "ui-monospace", "monospace"],
+              sans: ["IBM Plex Sans", "ui-sans-serif", "system-ui", "sans-serif"],
+            },
+            boxShadow: {
+              neon: "0 0 20px rgba(217, 70, 239, 0.25), 0 0 40px rgba(34, 211, 238, 0.12)",
+            },
+          },
+        },
+      };
+    </script>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600&family=JetBrains+Mono:wght@500;600&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+  <body
+    class="min-h-screen bg-zinc-950 text-zinc-100 font-sans antialiased selection:bg-fuchsia-500/30 selection:text-white"
+  >
+    <div
+      class="pointer-events-none fixed inset-0 bg-[radial-gradient(ellipse_at_top,_rgba(88,28,135,0.2),transparent_55%),radial-gradient(ellipse_at_bottom,_rgba(6,182,212,0.12),transparent_50%)]"
+    ></div>
+
+    <div class="relative mx-auto max-w-6xl px-4 py-10 sm:px-6 lg:px-8">
+      <header class="mb-12 border-b border-zinc-800/80 pb-8">
+        <p
+          class="font-display text-xs font-semibold uppercase tracking-[0.35em] text-fuchsia-400/90"
+        >
+          MVP · Berlin
+        </p>
+        <h1
+          class="mt-3 font-display text-3xl font-semibold tracking-tight text-white sm:text-4xl"
+        >
+          Stylo Berlin: AI Stylist &amp; Try-On
+        </h1>
+        <p class="mt-3 max-w-2xl text-sm leading-relaxed text-zinc-400">
+          Dark-mode console for recommendations and virtual try-on—plug in image URLs and hit the
+          API.
+        </p>
+      </header>
+
+      <div
+        class="grid grid-cols-1 gap-8 lg:grid-cols-2 lg:gap-10"
+      >
+        <!-- SECTION A: AI Stylist -->
+        <section
+          class="rounded-2xl border border-zinc-800/80 bg-zinc-900/50 p-6 shadow-neon backdrop-blur-sm sm:p-8"
+        >
+          <div class="flex items-center gap-2">
+            <span
+              class="h-2 w-2 rounded-full bg-cyan-400 shadow-[0_0_10px_rgba(34,211,238,0.8)]"
+            ></span>
+            <h2 class="font-display text-lg font-semibold text-white">
+              The AI Stylist
+            </h2>
+          </div>
+          <p class="mt-2 text-sm text-zinc-500">
+            Weather, mood → Berlin-ready looks from our mock wardrobe brain.
+          </p>
+
+          <div class="mt-6 space-y-4">
+            <input type="hidden" id="userId" value="mvp-frontend-user" />
+            <div>
+              <label for="weather" class="block text-xs font-medium uppercase tracking-wider text-zinc-500"
+                >Weather</label
+              >
+              <input
+                id="weather"
+                type="text"
+                placeholder="e.g. cold drizzle, 8°C"
+                class="mt-1.5 w-full rounded-lg border border-zinc-700 bg-zinc-950/80 px-3 py-2.5 text-sm text-white placeholder-zinc-600 outline-none transition focus:border-fuchsia-500/60 focus:ring-1 focus:ring-fuchsia-500/40"
+              />
+            </div>
+            <div>
+              <label for="mood" class="block text-xs font-medium uppercase tracking-wider text-zinc-500"
+                >Mood</label
+              >
+              <input
+                id="mood"
+                type="text"
+                placeholder="e.g. after the club, need coffee"
+                class="mt-1.5 w-full rounded-lg border border-zinc-700 bg-zinc-950/80 px-3 py-2.5 text-sm text-white placeholder-zinc-600 outline-none transition focus:border-fuchsia-500/60 focus:ring-1 focus:ring-fuchsia-500/40"
+              />
+            </div>
+            <button
+              type="button"
+              id="btnRecommend"
+              class="w-full rounded-lg bg-gradient-to-r from-fuchsia-600 to-violet-600 py-2.5 font-display text-sm font-semibold uppercase tracking-wide text-white shadow-lg transition hover:from-fuchsia-500 hover:to-violet-500 focus:outline-none focus:ring-2 focus:ring-fuchsia-400/50 active:scale-[0.99]"
+            >
+              Get recommendation
+            </button>
+          </div>
+
+          <div
+            id="recommendResult"
+            class="mt-6 min-h-[120px] rounded-xl border border-dashed border-zinc-700/80 bg-zinc-950/40 p-4 text-sm text-zinc-500"
+          >
+            Results will appear here.
+          </div>
+        </section>
+
+        <!-- SECTION B: Virtual Try-On -->
+        <section
+          class="rounded-2xl border border-zinc-800/80 bg-zinc-900/50 p-6 shadow-neon backdrop-blur-sm sm:p-8"
+        >
+          <div class="flex items-center gap-2">
+            <span
+              class="h-2 w-2 rounded-full bg-fuchsia-500 shadow-[0_0_10px_rgba(217,70,239,0.7)]"
+            ></span>
+            <h2 class="font-display text-lg font-semibold text-white">
+              Virtual try-on
+            </h2>
+          </div>
+          <p class="mt-2 text-sm text-zinc-500">
+            Public image URLs only—Replicate must fetch both files.
+          </p>
+
+          <div class="mt-6 space-y-4">
+            <div>
+              <label
+                for="personUrl"
+                class="block text-xs font-medium uppercase tracking-wider text-zinc-500"
+                >Person image URL</label
+              >
+              <input
+                id="personUrl"
+                type="url"
+                placeholder="https://…"
+                class="mt-1.5 w-full rounded-lg border border-zinc-700 bg-zinc-950/80 px-3 py-2.5 text-sm text-white placeholder-zinc-600 outline-none transition focus:border-cyan-500/60 focus:ring-1 focus:ring-cyan-500/40"
+              />
+            </div>
+            <div>
+              <label
+                for="garmentUrl"
+                class="block text-xs font-medium uppercase tracking-wider text-zinc-500"
+                >Garment image URL</label
+              >
+              <input
+                id="garmentUrl"
+                type="url"
+                placeholder="https://…"
+                class="mt-1.5 w-full rounded-lg border border-zinc-700 bg-zinc-950/80 px-3 py-2.5 text-sm text-white placeholder-zinc-600 outline-none transition focus:border-cyan-500/60 focus:ring-1 focus:ring-cyan-500/40"
+              />
+            </div>
+            <button
+              type="button"
+              id="btnTryOn"
+              class="w-full rounded-lg border border-cyan-500/40 bg-cyan-950/40 py-2.5 font-display text-sm font-semibold uppercase tracking-wide text-cyan-200 transition hover:border-cyan-400/60 hover:bg-cyan-950/70 focus:outline-none focus:ring-2 focus:ring-cyan-400/40 active:scale-[0.99]"
+            >
+              Generate try-on
+            </button>
+          </div>
+
+          <p
+            id="tryOnLoading"
+            class="mt-4 hidden text-center font-display text-xs font-medium uppercase tracking-widest text-cyan-400/90"
+          >
+            Warping garment… this takes ~10 seconds
+          </p>
+
+          <div
+            class="mt-6 overflow-hidden rounded-xl border border-zinc-700/80 bg-zinc-950/60"
+          >
+            <img
+              id="tryOnImage"
+              alt="Try-on result"
+              class="hidden max-h-[480px] w-full object-contain"
+            />
+            <p
+              id="tryOnPlaceholder"
+              class="p-8 text-center text-sm text-zinc-600"
+            >
+              Composite preview appears here.
+            </p>
+          </div>
+        </section>
+      </div>
+
+      <footer class="mt-16 border-t border-zinc-800/80 pt-8 text-center text-xs text-zinc-600">
+        Stylo Berlin MVP · FastAPI + Replicate
+      </footer>
+    </div>
+
+    <script>
+      const recommendResult = document.getElementById("recommendResult");
+      const tryOnImage = document.getElementById("tryOnImage");
+      const tryOnPlaceholder = document.getElementById("tryOnPlaceholder");
+      const tryOnLoading = document.getElementById("tryOnLoading");
+
+      function escapeHtml(s) {
+        const div = document.createElement("div");
+        div.textContent = s;
+        return div.innerHTML;
+      }
+
+      function renderRecommendations(data) {
+        if (!data.recommendations || !Array.isArray(data.recommendations)) {
+          throw new Error("Invalid response shape");
+        }
+        const cards = data.recommendations
+          .map((rec, i) => {
+            const items = (rec.outfits || [])
+              .map(
+                (o) =>
+                  `<li class="flex gap-2 border-l-2 border-fuchsia-500/50 pl-3 py-1">
+                    <span class="font-mono text-xs text-fuchsia-300/90">${escapeHtml(o.item_id || "")}</span>
+                    <span class="text-zinc-300">${escapeHtml(o.description || "")}</span>
+                  </li>`
+              )
+              .join("");
+            return `<article class="rounded-lg border border-zinc-700/60 bg-zinc-900/80 p-4 mb-4 last:mb-0">
+              <p class="font-display text-xs uppercase tracking-widest text-zinc-500">Look ${i + 1}</p>
+              <ul class="mt-3 space-y-1">${items || "<li class='text-zinc-500'>No items</li>"}</ul>
+              <p class="mt-4 text-sm leading-relaxed text-zinc-400 border-t border-zinc-800/80 pt-3">${escapeHtml(rec.rationale || "")}</p>
+            </article>`;
+          })
+          .join("");
+        recommendResult.className =
+          "mt-6 min-h-[120px] rounded-xl border border-zinc-700/80 bg-zinc-950/50 p-4 text-sm";
+        recommendResult.innerHTML = cards;
+      }
+
+      document.getElementById("btnRecommend").addEventListener("click", async () => {
+        const user_id = document.getElementById("userId").value.trim() || "mvp-frontend-user";
+        const weather_condition = document.getElementById("weather").value.trim();
+        const mood = document.getElementById("mood").value.trim();
+        if (!weather_condition || !mood) {
+          alert("Please enter both weather and mood.");
+          return;
+        }
+        recommendResult.innerHTML =
+          '<p class="text-zinc-500 animate-pulse">Consulting the stylist…</p>';
+        try {
+          const res = await fetch("/api/v1/recommend", {
+            method: "POST",
+            headers: { Accept: "application/json", "Content-Type": "application/json" },
+            body: JSON.stringify({ user_id, weather_condition, mood }),
+          });
+          const text = await res.text();
+          let data;
+          try {
+            data = JSON.parse(text);
+          } catch {
+            throw new Error(text || res.statusText);
+          }
+          if (!res.ok) {
+            throw new Error(data.detail || res.statusText || "Request failed");
+          }
+          renderRecommendations(data);
+        } catch (e) {
+          console.error(e);
+          alert("Recommendation failed: " + (e.message || e));
+          recommendResult.innerHTML =
+            '<p class="text-red-400/90">Something went wrong. Check the console.</p>';
+        }
+      });
+
+      document.getElementById("btnTryOn").addEventListener("click", async () => {
+        const person_image_url = document.getElementById("personUrl").value.trim();
+        const garment_image_url = document.getElementById("garmentUrl").value.trim();
+        if (!person_image_url || !garment_image_url) {
+          alert("Please enter both image URLs.");
+          return;
+        }
+        tryOnLoading.classList.remove("hidden");
+        tryOnImage.classList.add("hidden");
+        tryOnPlaceholder.classList.remove("hidden");
+        tryOnPlaceholder.textContent = "Generating…";
+        try {
+          const res = await fetch("/api/v1/try-on", {
+            method: "POST",
+            headers: { Accept: "application/json", "Content-Type": "application/json" },
+            body: JSON.stringify({ person_image_url, garment_image_url }),
+          });
+          const text = await res.text();
+          let data;
+          try {
+            data = JSON.parse(text);
+          } catch {
+            throw new Error(text || res.statusText);
+          }
+          if (!res.ok) {
+            throw new Error(
+              typeof data.detail === "string" ? data.detail : JSON.stringify(data.detail)
+            );
+          }
+          const url = data.composite_image_url;
+          if (!url) throw new Error("No composite_image_url in response");
+          tryOnImage.src = url;
+          tryOnImage.classList.remove("hidden");
+          tryOnPlaceholder.classList.add("hidden");
+        } catch (e) {
+          console.error(e);
+          alert("Try-on failed: " + (e.message || e));
+          tryOnPlaceholder.classList.remove("hidden");
+          tryOnPlaceholder.textContent = "Could not generate preview.";
+        } finally {
+          tryOnLoading.classList.add("hidden");
+        }
+      });
+    </script>
+  </body>
+</html>
